@@ -4,6 +4,18 @@ set -o errexit
 set -o pipefail
 set -o nounset
 
+create_superuser_if_configured() {
+  if [ -n "${DJANGO_ADMIN_EMAIL:-}" ] && [ -z "${DJANGO_SUPERUSER_EMAIL:-}" ]; then
+    export DJANGO_SUPERUSER_EMAIL="${DJANGO_ADMIN_EMAIL}"
+  fi
+
+  if [ -n "${DJANGO_SUPERUSER_EMAIL:-}" ] && [ -n "${DJANGO_SUPERUSER_PASSWORD:-}" ]; then
+    python /app/manage.py createsuperuser --no-input || true
+  fi
+}
+
+python /app/manage.py migrate
+create_superuser_if_configured
 
 python /app/manage.py collectstatic --noinput
 

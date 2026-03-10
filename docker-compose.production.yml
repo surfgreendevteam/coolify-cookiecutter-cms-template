@@ -52,9 +52,9 @@ services:
       - production_staticfiles:/app/staticfiles:ro
     networks:
       - backend
-    # Hinweis: Ports hier nur publishen, wenn Coolify NICHT selber mappt.
-    # ports:
-    #   - "8080:8080"
+    ports:
+      - "8080:8080"
+      - "443:443"
 
 networks:
   backend:
